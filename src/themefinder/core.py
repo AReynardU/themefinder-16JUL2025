@@ -130,6 +130,8 @@ async def find_themes(
         concurrency=concurrency,
     )
 
+    
+    
     logger.info("Finished finding themes")
     logger.info("Provide feedback or report bugs: packages@cabinetoffice.gov.uk")
     return {
@@ -139,6 +141,12 @@ async def find_themes(
         "mapping": mapping_df,
         "detailed_responses": detailed_df,
         "unprocessables": pd.concat([sentiment_unprocessables, mapping_unprocessables]),
+        # Add all intermediate DataFrames for inspection:
+        "printableSentimentAnalysis_df": printableSentimentAnalysis_df,
+        "printableSentimentUnprocessables_df": printableSentimentUnprocessables_df,
+        "printableTheme_df": printableTheme_df,
+        "printableCondensedTheme_df": printableCondensedTheme_df,
+        "printableRefinedTheme_df": printableRefinedTheme_df,
     }
 
 
@@ -556,22 +564,5 @@ async def detail_detection(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
-        #log each stage of processes
-       logger.info("Finished finding themes")
-        logger.info("Provide feedback or report bugs: packages@cabinetoffice.gov.uk")
-        return {
-            "question": question,
-            "sentiment": sentiment_df,
-            "themes": refined_theme_df,
-            "mapping": mapping_df,
-            "detailed_responses": detailed_df,
-            "unprocessables": pd.concat([sentiment_unprocessables, mapping_unprocessables]),
-            # Add all intermediate DataFrames for inspection:
-            "printableSentimentAnalysis_df": printableSentimentAnalysis_df,
-            "printableSentimentUnprocessables_df": printableSentimentUnprocessables_df,
-            "printableTheme_df": printableTheme_df,
-            "printableCondensedTheme_df": printableCondensedTheme_df,
-            "printableRefinedTheme_df": printableRefinedTheme_df,
-        } # end of log each stage of processes
     
     return detailed, _
