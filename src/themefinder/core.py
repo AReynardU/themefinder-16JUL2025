@@ -67,6 +67,11 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
+
+    # Create independent copies for later use
+    printableSentimentAnalysis_df = sentiment_df.copy()
+    printableSentimentUnprocessables_df = sentiment_unprocessables.copy()
+    
     theme_df, _ = await theme_generation(
         sentiment_df,
         llm,
@@ -74,6 +79,10 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
+
+    # Create independent copies for later use
+    printableTheme_df = theme_df.copy()
+
     condensed_theme_df, _ = await theme_condensation(
         theme_df,
         llm,
@@ -81,6 +90,10 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
+
+    # Create independent copies for later use
+    printableCondensedTheme_df = condensed_theme_df.copy()
+
     refined_theme_df, _ = await theme_refinement(
         condensed_theme_df,
         llm,
@@ -88,6 +101,10 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
+
+    # Create independent copies for later use
+    printableRefinedTheme_df = refined_theme_df.copy()
+
     if target_n_themes is not None:
         refined_theme_df, _ = await theme_target_alignment(
             refined_theme_df,
