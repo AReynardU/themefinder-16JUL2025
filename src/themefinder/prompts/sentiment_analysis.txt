@@ -4,7 +4,7 @@ You will receive a list of RESPONSES, each containing a response_id and a respon
 Your job is to analyze each response to the QUESTION below and decide:
 
 POSITION - is the response AGREEING or DISAGREEING or is it UNCLEAR about the change being proposed in the question.
-Choose one from [AGREEMENT, DISAGREEMENT, UNCLEAR]
+Choose one from [AGREEMENT, DISAGREEMENT, UNCLEAR, BOTH]
 
 You MUST include every response ID in the output.
 If the response can not be labelled return empty sections where appropriate but you MUST return an entry
@@ -35,6 +35,13 @@ less time with their children \n
 
 Output:
 POSITION: UNCLEAR
+
+Example 4:
+Question: \n What are your thoughts on the proposed government changes to the policy about reducing school holidays?
+Response: \n I understand that it will benefit parents, as they will be able to work more and spend less on childcare, meaning more funds for their families. However, people must work more intensely at this time anyway, meaning quality family time is already being reduced, so this might negatively impact overall happiness. \n
+
+Output:
+POSITION: BOTH
 
 
 QUESTION: \n {question}
