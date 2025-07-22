@@ -68,9 +68,9 @@ async def find_themes(
         concurrency=concurrency,
     )
 
-    # Create independent copies for later use
-    printableSentimentAnalysis_df = sentiment_df.copy()
-    printableSentimentUnprocessables_df = sentiment_unprocessables.copy()
+    #COPILOT SUGGESTION 22JUL2025 - persist table stages.
+    spark.createDataFrame(sentiment_df).write.mode("overwrite").saveAsTable("SentimentAnalysisStage")
+    spark.createDataFrame(sentiment_unprocessables).write.mode("overwrite").saveAsTable("SentimentUnprocessableStage")
     
     theme_df, _ = await theme_generation(
         sentiment_df,
@@ -80,8 +80,8 @@ async def find_themes(
         concurrency=concurrency,
     )
 
-    # Create independent copies for later use
-    printableTheme_df = theme_df.copy()
+    #COPILOT SUGGESTION 22JUL2025 - persist table stages.
+    spark.createDataFrame(theme_df).write.mode("overwrite").saveAsTable("ThemeGenerationStage")
 
     condensed_theme_df, _ = await theme_condensation(
         theme_df,
@@ -91,8 +91,8 @@ async def find_themes(
         concurrency=concurrency,
     )
 
-    # Create independent copies for later use
-    printableCondensedTheme_df = condensed_theme_df.copy()
+    #COPILOT SUGGESTION 22JUL2025 - persist table stages.
+    spark.createDataFrame(condensed_theme_df).write.mode("overwrite").saveAsTable("ThemeCondensationStage")
 
     refined_theme_df, _ = await theme_refinement(
         condensed_theme_df,
@@ -102,8 +102,7 @@ async def find_themes(
         concurrency=concurrency,
     )
 
-    # Create independent copies for later use
-    printableRefinedTheme_df = refined_theme_df.copy()
+     
 
     if target_n_themes is not None:
         refined_theme_df, _ = await theme_target_alignment(
@@ -114,6 +113,10 @@ async def find_themes(
             system_prompt=system_prompt,
             concurrency=concurrency,
         )
+
+    #COPILOT SUGGESTION 22JUL2025 - persist table stages.
+    spark.createDataFrame(refined_theme_df).write.mode("overwrite").saveAsTable("ThemeRefinementStage")
+
     mapping_df, mapping_unprocessables = await theme_mapping(
         sentiment_df[["response_id", "response"]],
         llm,
@@ -122,6 +125,11 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
+
+    #COPILOT SUGGESTION 22JUL2025 - persist table stages.
+    spark.createDataFrame(mapping_df).write.mode("overwrite").saveAsTable("ThemeMappingStage")
+    spark.createDataFrame(mapping_unprocessables).write.mode("overwrite").saveAsTable("ThemeMappingUnprocessableStage")
+    
     detailed_df, _ = await detail_detection(
         responses_df[["response_id", "response"]],
         llm,
@@ -129,8 +137,9 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
-
     
+    #COPILOT SUGGESTION 22JUL2025 - persist table stages.
+    spark.createDataFrame(detailed_df).write.mode("overwrite").saveAsTable("DetailDetectionStage")
     
     logger.info("Finished finding themes")
     logger.info("Provide feedback or report bugs: packages@cabinetoffice.gov.uk")
