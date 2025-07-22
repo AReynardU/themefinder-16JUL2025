@@ -138,12 +138,7 @@ async def find_themes(
         "mapping": mapping_df,
         "detailed_responses": detailed_df,
         "unprocessables": pd.concat([sentiment_unprocessables, mapping_unprocessables]),
-        # Add all intermediate DataFrames for inspection:
-        "printableSentimentAnalysis_df": printableSentimentAnalysis_df,
-        "printableSentimentUnprocessables_df": printableSentimentUnprocessables_df,
-        "printableTheme_df": printableTheme_df,
-        "printableCondensedTheme_df": printableCondensedTheme_df,
-        "printableRefinedTheme_df": printableRefinedTheme_df,
+ 
     }
 
 
