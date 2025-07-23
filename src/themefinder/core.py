@@ -67,7 +67,6 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
-    
     theme_df, _ = await theme_generation(
         sentiment_df,
         llm,
@@ -75,9 +74,6 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
-
-
-
     condensed_theme_df, _ = await theme_condensation(
         theme_df,
         llm,
@@ -85,9 +81,6 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
-
-
-
     refined_theme_df, _ = await theme_refinement(
         condensed_theme_df,
         llm,
@@ -95,9 +88,6 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
-
-     
-
     if target_n_themes is not None:
         refined_theme_df, _ = await theme_target_alignment(
             refined_theme_df,
@@ -107,8 +97,6 @@ async def find_themes(
             system_prompt=system_prompt,
             concurrency=concurrency,
         )
-
-
     mapping_df, mapping_unprocessables = await theme_mapping(
         sentiment_df[["response_id", "response"]],
         llm,
@@ -117,8 +105,6 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
-
-    
     detailed_df, _ = await detail_detection(
         responses_df[["response_id", "response"]],
         llm,
@@ -126,9 +112,7 @@ async def find_themes(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
-    
 
-    
     logger.info("Finished finding themes")
     logger.info("Provide feedback or report bugs: packages@cabinetoffice.gov.uk")
     return {
@@ -138,7 +122,6 @@ async def find_themes(
         "mapping": mapping_df,
         "detailed_responses": detailed_df,
         "unprocessables": pd.concat([sentiment_unprocessables, mapping_unprocessables]),
- 
     }
 
 
@@ -556,5 +539,4 @@ async def detail_detection(
         system_prompt=system_prompt,
         concurrency=concurrency,
     )
-    
     return detailed, _
